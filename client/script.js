@@ -1,38 +1,40 @@
-const socket = io("http://localhost:3000");
-const inputBtn = document.querySelector("#submit-button");
-
-socket.on('connect', () => {
-   console.log('Conectado ao servidor')
-})
-
-function sendMessage(e) {
-   e.preventDefault();
-   console.log("sent");
-   let inputText = document.querySelector("#message-input");
-   const message = inputText.value;
-   socket.emit('sendMessage', message);
-   inputText.value = "";
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-   let storagedMessages = JSON.parse(localStorage.getItem('messages'))
-   // const messageField = document.querySelector("#message-container");
-   // for (let i = 0; i < messages.length; i++) {
-   //    const messageElement = document.createElement("p");
-   //    messageElement.textContent = messages;
-   //    messageField.appendChild(messageElement);
-   //    }
-   console.log(storagedMessages)
+   const socket = io("http://localhost:3000");
+   const inputBtn = document.querySelector("#submit-button");
+   // let messages = [];
+   
+   socket.on('connect', () => {
+      console.log('Conectado ao servidor')
+   })
+   
+   socket.on('previousMessages', (messages) => {
+      const messageList = document.querySelector("#message-container");
+      messages.forEach((message) => {
+         const item = document.createElement('p');
+         item.textContent = message.text;
+         messageList.appendChild(item);
+      })
+   })
+
+   socket.on('message', (data) => {
+      const messageList = document.querySelector("#message-container");
+         const item = document.createElement('p');
+         item.textContent = data.text;
+         messageList.appendChild(item);
+   })
+
+   function sendMessage(e) {
+      e.preventDefault();
+      let inputText = document.querySelector("#message-input");
+      // console.log("sent");
+      
+      const message = inputText.value;
+      socket.emit('sendMessage', { text: message });
+      // messages.push(message);
+      inputText.value = "";
+   }
+
+   inputBtn.addEventListener("click", sendMessage);
 })
 
-socket.on("receiveMessage", (data) => {
-   const messageField = document.querySelector("#message-container");
-   const messageElement = document.createElement("p");
-   messageElement.textContent = data;
-   messageField.appendChild(messageElement);
-   let messages = [];
-   messages.push(data);
-   localStorage.setItem('messages', JSON.stringify(messages));
-});
 
-inputBtn.addEventListener("click", sendMessage);
