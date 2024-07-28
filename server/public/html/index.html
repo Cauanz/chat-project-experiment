@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Página inicial</title>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js" integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+
+   <main>
+      <header>
+         <h1>Bem-vindo ao Chat</h1>
+      </header>
+
+      <section id="message-container">
+         <!-- Aqui as mensagens serão renderizadas -->
+      </section>
+
+      <form id="message-form">
+         <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+         <button type="submit" id="submit-button">Enviar</button>
+      </form>
+   </main>
+
+   <footer>
+      <p>&copy; 2023 Meu Chat</p>
+   </footer>
+
+   <script src="./js/script.js"></script>
+</body>
+</html>
