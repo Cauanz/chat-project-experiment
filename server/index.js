@@ -7,6 +7,8 @@ const cors = require('cors')
 const path = require('path')
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt')
+require('dotenv').config();
+const cookieParser = require('cookie-parser');
 
 const Message = require('./models/Message');
 const User = require('./models/User');
@@ -27,15 +29,31 @@ app.use(cors({
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 // ['http://localhost:3000', 'http://localhost:8080']
+app.use(cookieParser());
+app.use(express.json());
 
 mongoose.connect('mongodb+srv://cauanzelazo:dIsJALWHdKh31XyQ@cluster0.efug1zl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2')
 
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const SECRET = 'aofjuihgqwhrt982htg9G9ghv78qhbggb9uG9VBQ8G9vgV9gv9GHV9h9*G&rtTRB7BE5R7';
 
-app.get('/', (req, res) => {
+const authenticateToken = (req, res, next) => {
+   const token = req.cookies.authToken;
+
+   if(!token){
+      return res.redirect('/register')
+   }
+
+   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+      if(err) return res.sendStatus(403);
+      req.user = user;
+      next();
+   });
+};
+
+
+app.get('/', authenticateToken, (req, res) => {
    console.log('Server running');
    // res.write("Server running");
    // res.end();
@@ -110,9 +128,11 @@ app.post('/login', async (req, res) => {
          return res.status(401).json("Senha incorreta");
       }
 
-      const token = jwt.sign({ userId: user._id }, SECRET)
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET)
 
       console.log({ token: token })
+
+      res.cookie('authToken', token, { httpOnly: true, secure: true })
       res.redirect('/')
    } catch (error) {
       console.log('Ocorreu um erro ao tentar fazer login:', error)

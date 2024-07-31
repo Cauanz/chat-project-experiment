@@ -18,6 +18,14 @@
          <br>
          <input type="submit" value="Login">
       </form>
+
+      <span>Não tem uma conta? <a class="register-redirect">Register</a></span>
    </div>
+
+<script>
+   document.querySelector('.register-redirect').addEventListener('click', () => {
+      window.location.href = '/register'
+   })
+</script>
 </body>
 </html>
