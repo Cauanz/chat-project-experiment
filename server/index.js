@@ -139,6 +139,35 @@ app.post('/login', async (req, res) => {
    }
 })
 
+app.get('/getusers', async (req, res) => {
+
+   const users = await User.find();
+
+   return res.json(users)
+   
+})
+
+
+app.post('/create-room', authenticateToken, async (req, res) => {
+
+   const {chatName, chatParticipants} = req.body;
+
+   //TODO o participants são os IDS não os nomes, tenho que criar um processamento para encontrar os Users no DB
+
+   console.log(chatName, chatParticipants);
+
+   // try {
+      //TODO - Criar chat, com nome, adicionar os ids dos participantes, talvez o nome também mas isso envolve o TODO acima,
+      //TODO talvez responder para o chat novo aparecer no UI, talvez somente responder para recarregar
+   // } catch (error) {
+      
+   // }
+
+})
+
+app.get('/room', (req, res) => {
+   res.sendFile(path.join(__dirname, 'public', '/html/chat_room.html'))
+})
 
 io.on('connection', (socket) => {
    console.log('Um usuario se conectou');
