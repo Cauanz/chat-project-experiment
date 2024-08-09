@@ -55,22 +55,6 @@ const toogleModal = () => {
 }
 
 
-const createRoom = async () => {
-
-   const chatName = document.querySelector('#chat-name').value
-   // const chatParticipants = document.querySelector('#chat-participants').value
-   const chatParticipants = Array.from(document.querySelector('#chat-participants').selectedOptions).map(option => option.value)
-   const data = { chatName, chatParticipants };
-   console.log(data)
-
-   axios.post('http://localhost:3000/create-room', data)
-      .then(res => {
-         console.log("Sala criada", res)
-      })
-      .catch(err => {
-         console.log("Erro ao criar a sala", err)
-      })
-}
 
 
 
@@ -129,6 +113,22 @@ const createRoom = async () => {
 //    console.log(selectedValues)
 // })
 
-document.querySelector('.submit').addEventListener('click', createRoom);
+document.querySelector('.chat-form').addEventListener('submit', async (e) => {
+   e.preventDefault();
+
+   const chatName = document.querySelector('#chat-name').value
+   const chatParticipants = Array.from(document.querySelector('#chat-participants').selectedOptions).map(option => option.value)
+   const data = { chatName, chatParticipants };
+
+   axios.post('http://localhost:3000/create-room', data)
+      .then(res => {
+         window.location.href = res.data.redirectUrl
+         console.log(res.data)
+      })
+      .catch(err => {
+         console.log("Erro ao criar a sala", err)
+      })
+   
+});
 document.querySelector('.open-modal').addEventListener('click', toogleModal);
 document.querySelector('.close-modal').addEventListener('click', toogleModal);

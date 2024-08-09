@@ -12,6 +12,7 @@ const cookieParser = require('cookie-parser');
 
 const Message = require('./models/Message');
 const User = require('./models/User');
+const Chat = require('./models/Chat');
 
 const port = 3000;
 const app = express();
@@ -151,17 +152,32 @@ app.get('/getusers', async (req, res) => {
 app.post('/create-room', authenticateToken, async (req, res) => {
 
    const {chatName, chatParticipants} = req.body;
-
-   //TODO o participants são os IDS não os nomes, tenho que criar um processamento para encontrar os Users no DB
-
    console.log(chatName, chatParticipants);
+   
+   try {
 
-   // try {
-      //TODO - Criar chat, com nome, adicionar os ids dos participantes, talvez o nome também mas isso envolve o TODO acima,
       //TODO talvez responder para o chat novo aparecer no UI, talvez somente responder para recarregar
-   // } catch (error) {
       
-   // }
+      const users = await Promise.all(chatParticipants.map(async(userId) => {
+         const user = await User.findById(userId)
+         return { _id: user._id, name: user.name };
+      }))
+
+      const newChat = new Chat({
+         name: chatName,
+         participants: users,
+         messages: [],
+      })
+
+      await newChat.save();
+
+      console.log("Chat criado com sucesso")
+      // res.redirect('/')
+      res.status(201).json({ redirectUrl: '/' })
+
+   } catch (error) {
+      console.log("Houve um erro ao tentar criar a sala", error)
+   }
 
 })
 
