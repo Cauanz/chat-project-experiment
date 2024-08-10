@@ -1,4 +1,37 @@
 
+// document.querySelector('#chat-participants').addEventListener('change', () => {
+//    const selected = this.options[this.selectedIndex];
+//    const selectedValues = [];
+//    for (let i = 0; i < this.options.length; i++) {
+//       if(this.options[i].selected){
+//          selectedValues.push(this.options[i].value);
+//       }
+//    }
+//    console.log(selectedValues)
+// })
+
+
+
+const getChats = async () => {
+
+   axios.get('http://localhost:3000/get-chats')
+      .then(res => res)
+      .then(data => {
+               const chatList = document.querySelector('.chats');
+
+               data.data.forEach((chat) => {
+                  const div = document.createElement('div');
+                  const chatName = document.createElement('a')
+                  chatName.href = chat.name
+                  chatName.textContent = chat.name
+                  div.appendChild(chatName)
+                  chatList.appendChild(div)
+               })
+            })
+}
+
+
+
 const generateOptions = async () => {
    const select = document.querySelector("#chat-participants")
 
@@ -55,64 +88,6 @@ const toogleModal = () => {
 }
 
 
-
-
-
-//TODO usar função de toggleModal para chamar back para retornar usuarios ao front para criar options
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//    const socket = io("http://localhost:3000");
-//    const inputBtn = document.querySelector("#submit-button");
-//    // let messages = [];
-   
-//    socket.on('connect', () => {
-//       console.log('Conectado ao servidor')
-//    })
-   
-   
-//    socket.on('previousMessages', (messages) => {
-//       const messageList = document.querySelector("#message-container");
-//       messages.forEach((message) => {
-//          const item = document.createElement('p');
-//          item.textContent = message.text;
-//          messageList.appendChild(item);
-//       })
-//    })
-
-//    socket.on('message', (data) => {
-//       const messageList = document.querySelector("#message-container");
-//          const item = document.createElement('p');
-//          item.textContent = data.text;
-//          messageList.appendChild(item);
-//    })
-
-//    function sendMessage(e) {
-//       e.preventDefault();
-//       let inputText = document.querySelector("#message-input");
-//       // console.log("sent");
-      
-//       const message = inputText.value;
-//       socket.emit('sendMessage', { text: message });
-//       // messages.push(message);
-//       inputText.value = "";
-//    }
-
-//    inputBtn.addEventListener("click", sendMessage);
-// })
-
-
-// document.querySelector('#chat-participants').addEventListener('change', () => {
-//    const selected = this.options[this.selectedIndex];
-//    const selectedValues = [];
-//    for (let i = 0; i < this.options.length; i++) {
-//       if(this.options[i].selected){
-//          selectedValues.push(this.options[i].value);
-//       }
-//    }
-//    console.log(selectedValues)
-// })
-
 document.querySelector('.chat-form').addEventListener('submit', async (e) => {
    e.preventDefault();
 
@@ -122,8 +97,9 @@ document.querySelector('.chat-form').addEventListener('submit', async (e) => {
 
    axios.post('http://localhost:3000/create-room', data)
       .then(res => {
-         window.location.href = res.data.redirectUrl
+         // window.location.href = res.data.redirectUrl
          console.log(res.data)
+         // toogleModal()
       })
       .catch(err => {
          console.log("Erro ao criar a sala", err)
@@ -132,3 +108,49 @@ document.querySelector('.chat-form').addEventListener('submit', async (e) => {
 });
 document.querySelector('.open-modal').addEventListener('click', toogleModal);
 document.querySelector('.close-modal').addEventListener('click', toogleModal);
+
+document.addEventListener('DOMContentLoaded', () => {
+   const socket = io("http://localhost:3000");
+   const inputBtn = document.querySelector("#submit-button");
+   // let messages = [];
+   getChats()
+   
+   socket.on('connect', () => {
+      console.log('Conectado ao servidor')
+   })
+
+   socket.on('reload', () => {
+      console.log("Chat room criado, recarregar página")
+      getChats()
+   })
+   
+   
+   // socket.on('previousMessages', (messages) => {
+   //    const messageList = document.querySelector("#message-container");
+   //    messages.forEach((message) => {
+   //       const item = document.createElement('p');
+   //       item.textContent = message.text;
+   //       messageList.appendChild(item);
+   //    })
+   // })
+
+   // socket.on('message', (data) => {
+   //    const messageList = document.querySelector("#message-container");
+   //       const item = document.createElement('p');
+   //       item.textContent = data.text;
+   //       messageList.appendChild(item);
+   // })
+
+   // function sendMessage(e) {
+   //    e.preventDefault();
+   //    let inputText = document.querySelector("#message-input");
+   //    // console.log("sent");
+      
+   //    const message = inputText.value;
+   //    socket.emit('sendMessage', { text: message });
+   //    // messages.push(message);
+   //    inputText.value = "";
+   // }
+
+   // inputBtn.addEventListener("click", sendMessage);
+})

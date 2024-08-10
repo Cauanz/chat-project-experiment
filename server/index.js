@@ -35,9 +35,34 @@ app.use(express.json());
 
 mongoose.connect('mongodb+srv://cauanzelazo:dIsJALWHdKh31XyQ@cluster0.efug1zl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2')
 
-
 app.use(express.static(path.join(__dirname, 'public')));
 
+io.on('connection', (socket) => {
+   console.log('Um usuario se conectou');
+
+   Message.find().sort('timestamp').exec()
+      .then((messages) => {
+         socket.emit('previousMessages', messages);
+      })
+      .catch((err) => {
+         console.log(err);
+      })
+
+   socket.on('sendMessage', (data) => {
+      console.log(data);
+      const message = new Message({ text: data.text });
+      message.save()
+         .then((data) => {
+            io.emit('message', data);
+         })
+         .catch((err) => {
+            console.log(err);
+         });
+      // socket.broadcast.emit('receiveMessage', data); //*TALVEZ REMOVER O BROADCAST, PARA PEGAR A MENSAGEM QUE A PESSOA ENVIOU TAMBÉM
+   });
+
+   
+});
 
 const authenticateToken = (req, res, next) => {
    const token = req.cookies.authToken;
@@ -105,7 +130,6 @@ app.post('/register', async (req, res) => {
 
 })
 
-
 app.get('/login', (req, res) => {
    res.sendFile(path.join(__dirname, 'public', '/html/login.html'));
 })
@@ -148,6 +172,15 @@ app.get('/getusers', async (req, res) => {
    
 })
 
+app.get('/get-chats', authenticateToken, async (req, res) => {
+
+   try {
+      const chatRooms = await Chat.find();
+      res.send(chatRooms)
+   } catch (error) {
+      console.log("Ocorreu um erro ao tentar recuperar as salas de chat", error)
+   }
+})
 
 app.post('/create-room', authenticateToken, async (req, res) => {
 
@@ -173,8 +206,9 @@ app.post('/create-room', authenticateToken, async (req, res) => {
 
       console.log("Chat criado com sucesso")
       // res.redirect('/')
-      res.status(201).json({ redirectUrl: '/' })
-
+      // res.status(201).json({ redirectUrl: '/' })
+      io.emit('reload')
+      
    } catch (error) {
       console.log("Houve um erro ao tentar criar a sala", error)
    }
@@ -185,30 +219,7 @@ app.get('/room', (req, res) => {
    res.sendFile(path.join(__dirname, 'public', '/html/chat_room.html'))
 })
 
-io.on('connection', (socket) => {
-   console.log('Um usuario se conectou');
 
-   Message.find().sort('timestamp').exec()
-      .then((messages) => {
-         socket.emit('previousMessages', messages);
-      })
-      .catch((err) => {
-         console.log(err);
-      })
-
-   socket.on('sendMessage', (data) => {
-      console.log(data);
-      const message = new Message({ text: data.text });
-      message.save()
-         .then((data) => {
-            io.emit('message', data);
-         })
-         .catch((err) => {
-            console.log(err);
-         });
-      // socket.broadcast.emit('receiveMessage', data); //*TALVEZ REMOVER O BROADCAST, PARA PEGAR A MENSAGEM QUE A PESSOA ENVIOU TAMBÉM
-   });
-});
 
 // app.get('/create', (req, res) => {
 //    res.redirect(302, '/create.html')
