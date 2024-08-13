@@ -40,6 +40,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
    console.log('Um usuario se conectou');
 
+   socket.on('joinRoom', (roomId) => {
+      socket.join(roomId);
+      console.log(`Cliente entrou na sala: ${roomId}`)
+   })
+
+   socket.on('disconnect', () => {
+      console.log('Cliente desconectado');
+   });
+
    Message.find().sort('timestamp').exec()
       .then((messages) => {
          socket.emit('previousMessages', messages);
@@ -86,9 +95,31 @@ app.get('/', authenticateToken, (req, res) => {
    res.sendFile(path.join(__dirname, 'public', '/html/index.html'))
 })
 
+// app.get('/room', (req, res) => {
+//    res.sendFile(path.join(__dirname, 'public', '/html/chat_room.html'))
+// })
+
+//! PROBLEMA COM O REDIRECIONAMENTO PARA SALA DE CHAT AINDA NÃO RESOLVIDO
+app.get('/enter-room/:roomId', authenticateToken, async (req, res) => {
+   try {
+
+      const chatId = await req.params.roomId;
+
+      res.sendFile(path.join(__dirname, 'public', `/html/chat_room.html?roomId=${chatId}`));
+      // res.redirect(302, `/html/chat_room.html?roomId=${chatId}`);
+   } catch (error) {
+      console.log('Ocorreu um erro ao tentar entrar no chat: ', error)
+      res.status(500).send('Erro ao tentar entrar no chat');
+   }
+
+})
 
 app.get('/register', (req, res) => {
    res.sendFile(path.join(__dirname, 'public', '/html/register.html'));
+})
+
+app.get('/login', (req, res) => {
+   res.sendFile(path.join(__dirname, 'public', '/html/login.html'));
 })
 
 app.post('/register', async (req, res) => {
@@ -128,10 +159,6 @@ app.post('/register', async (req, res) => {
       console.log('Ocorreu um erro ao tentar se cadastrar:', error)
    }
 
-})
-
-app.get('/login', (req, res) => {
-   res.sendFile(path.join(__dirname, 'public', '/html/login.html'));
 })
 
 app.post('/login', async (req, res) => {
@@ -215,9 +242,7 @@ app.post('/create-room', authenticateToken, async (req, res) => {
 
 })
 
-app.get('/room', (req, res) => {
-   res.sendFile(path.join(__dirname, 'public', '/html/chat_room.html'))
-})
+
 
 
 

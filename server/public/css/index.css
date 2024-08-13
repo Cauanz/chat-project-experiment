@@ -32,9 +32,37 @@ header h1 {
    color: #333;
 }
 
-/* .chats {
+.chat-rooms {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
 
+/* .chats div {
+   border: 1px solid black;
+   padding: 5px;
 } */
+
+.chats a {
+   color: #000;
+   text-decoration: none;
+   padding: 5px;
+   border: 1px solid black;
+   cursor: pointer;
+}
+
+/* .chats div:hover {
+   scale: 1.1;
+   color: #505050;
+} */
+
+.chats {
+   width: 100%;
+   display: flex;
+   justify-content: space-evenly;
+}
+
+
 
 .open-modal {
    width: 40px;

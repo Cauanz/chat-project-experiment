@@ -20,12 +20,11 @@ const getChats = async () => {
                const chatList = document.querySelector('.chats');
 
                data.data.forEach((chat) => {
-                  const div = document.createElement('div');
                   const chatName = document.createElement('a')
-                  chatName.href = chat.name
+                  chatName.dataset.chatId = chat._id
                   chatName.textContent = chat.name
-                  div.appendChild(chatName)
-                  chatList.appendChild(div)
+                  chatName.classList.add('chat-room')
+                  chatList.appendChild(chatName)
                })
             })
 }
@@ -154,3 +153,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
    // inputBtn.addEventListener("click", sendMessage);
 })
+
+
+//TODO terminar essa função para fazer a requisição quando clicar no nome do chat
+//!não está funcionando
+// document.querySelector('.chats').addEventListener('click', (e) => {
+//    const childs = e.target.closest('.chat-room')
+//    if(child){
+//       child.forEach((chatRoom) => {
+//          console.log("Funcionou")
+//          axios.get(`http://localhost:3000/enter-chat?roomId=${chatRoom.dataset.chatId}`)
+//       })
+//    }
+// })
+
+setInterval(() => {
+   document.querySelectorAll('.chat-room').forEach((chatRoom) => {
+      chatRoom.addEventListener("click", async () => {
+         console.log("Funcionou")
+         
+         axios.get(`http://localhost:3000/enter-room/:roomId=${chatRoom.dataset.chatId}`)
+         .then(res => {
+
+            if(res) {
+               window.location.href = res.data;
+               console.log(res)
+            }
+
+         })
+         .catch(err => console.log(err))
+      })
+   })
+}, 2000)
