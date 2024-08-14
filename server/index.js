@@ -42,8 +42,7 @@ io.on('connection', (socket) => {
 
    socket.on('joinRoom', async (roomId) => {
 
-
-      //TODO fazer o processo sei lá para entrar na sala e usar o array de mensagens para armazenar as mensagens
+      //TODO fazer o processo sei lá para entrar na sala e usar o array de mensagens para armazenar as mensagens 
       // try {
       //    const room = await Chat.findOne({ roomId })
       // } catch (error) {
@@ -107,18 +106,10 @@ app.get('/', authenticateToken, (req, res) => {
    res.sendFile(path.join(__dirname, 'public', '/html/index.html'))
 })
 
-// app.get('/room', (req, res) => {
-//    res.sendFile(path.join(__dirname, 'public', '/html/chat_room.html'))
-// })
-
-//! PROBLEMA COM O REDIRECIONAMENTO PARA SALA DE CHAT AINDA NÃO RESOLVIDO
 app.get('/enter-room/:roomId', authenticateToken, async (req, res) => {
    try {
-
       const chatId = await req.params.roomId;
-
-      res.sendFile(path.join(__dirname, 'public', `/html/chat_room.html?roomId=${chatId}`));
-      // res.redirect(302, `/html/chat_room.html?roomId=${chatId}`);
+      res.sendFile(path.join(__dirname, 'public', `/html/chat_room.html`));
    } catch (error) {
       console.log('Ocorreu um erro ao tentar entrar no chat: ', error)
       res.status(500).send('Erro ao tentar entrar no chat');
