@@ -40,7 +40,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
    console.log('Um usuario se conectou');
 
-   socket.on('joinRoom', (roomId) => {
+   socket.on('joinRoom', async (roomId) => {
+
+
+      //TODO fazer o processo sei lá para entrar na sala e usar o array de mensagens para armazenar as mensagens
+      // try {
+      //    const room = await Chat.findOne({ roomId })
+      // } catch (error) {
+         
+      // }
+
       socket.join(roomId);
       console.log(`Cliente entrou na sala: ${roomId}`)
    })
@@ -49,29 +58,32 @@ io.on('connection', (socket) => {
       console.log('Cliente desconectado');
    });
 
-   Message.find().sort('timestamp').exec()
-      .then((messages) => {
-         socket.emit('previousMessages', messages);
-      })
-      .catch((err) => {
-         console.log(err);
-      })
 
-   socket.on('sendMessage', (data) => {
-      console.log(data);
-      const message = new Message({ text: data.text });
-      message.save()
-         .then((data) => {
-            io.emit('message', data);
-         })
-         .catch((err) => {
-            console.log(err);
-         });
-      // socket.broadcast.emit('receiveMessage', data); //*TALVEZ REMOVER O BROADCAST, PARA PEGAR A MENSAGEM QUE A PESSOA ENVIOU TAMBÉM
-   });
+   //* COISAS RELACIONADAS A ENVIO DE MENSAGENS
+   // Message.find().sort('timestamp').exec()
+   //    .then((messages) => {
+   //       socket.emit('previousMessages', messages);
+   //    })
+   //    .catch((err) => {
+   //       console.log(err);
+   //    })
 
+   // socket.on('sendMessage', (data) => {
+   //    console.log(data);
+   //    const message = new Message({ text: data.text });
+   //    message.save()
+   //       .then((data) => {
+   //          io.emit('message', data);
+   //       })
+   //       .catch((err) => {
+   //          console.log(err);
+   //       });
+   //    // socket.broadcast.emit('receiveMessage', data); //*TALVEZ REMOVER O BROADCAST, PARA PEGAR A MENSAGEM QUE A PESSOA ENVIOU TAMBÉM
+   // });
+   //* COISAS RELACIONADAS A ENVIO DE MENSAGENS
    
 });
+
 
 const authenticateToken = (req, res, next) => {
    const token = req.cookies.authToken;
