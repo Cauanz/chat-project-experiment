@@ -53,6 +53,24 @@ io.on('connection', (socket) => {
       console.log(`Cliente entrou na sala: ${roomId}`)
    })
 
+   //*CRIEI ESSA FUNÇÃO, QUE CRIA O OBJETO MENSAGEM AQUI E DAI SIM ENVIA PARA O SERVIDOR, NA ARRAY DE MENSAGENS E TRANSMITE PARA OS OUTROS
+   //!AINDA EM PRODUÇÃO
+   socket.on('new_message', async (messageTxt) => {
+      
+      // const userId = User.findOne
+
+      console.log(socket.userId);
+
+
+      // const message = new Message({
+      //    content: messageTxt,
+      //    timeStamp,
+      //    sender: {
+      //       id: 
+      //    }
+      // })
+   })
+
    socket.on('disconnect', () => {
       console.log('Cliente desconectado');
    });
@@ -244,14 +262,6 @@ app.post('/create-room', authenticateToken, async (req, res) => {
    }
 
 })
-
-
-
-
-
-// app.get('/create', (req, res) => {
-//    res.redirect(302, '/create.html')
-// })
 
 
 server.listen(port, '0.0.0.0', () => {

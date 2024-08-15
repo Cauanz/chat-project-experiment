@@ -1,4 +1,3 @@
-import Message from "../../models/Message";
 const socket = io();
 
 document.addEventListener("DOMContentLoaded", (e) => {
@@ -15,25 +14,17 @@ document.addEventListener("DOMContentLoaded", (e) => {
    }
 })
 
+const sendMessage = () => {
 
-//TODO terminar sistema de envio de mensagens
-// const sendMessage = () => {
+   const messageTxt = document.querySelector('.message-input').value;
 
-//    const messageTxt = document.querySelector('.message-input').value;
-//    let userId  ; //NÃO SEI
-
-
-//    const message = new Message({
-//       content: messageTxt,
-//       timeStamp,
-//       sender: userId
-//    })
+   socket.emit('new_message', messageTxt);
+}
 
 
-//    socket.emit()
-// }
-
-
-
-
-//! NÃO TESTADO
+//!PROBLEMA QUE QUANDO ENVIA A MENSAGEM A PÁGINA RECARREGA, DESCONECTA E RECONECTA AO SERVER E NÃO CHAMA FUNÇÃO DO SOCKET.IO DO LADO DO SERVIDOR
+document.querySelector('#message-form').addEventListener('submit', (e) => {
+   e.preventDefault();
+   console.log('Evento de submit prevenido');
+   sendMessage();
+});
