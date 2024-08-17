@@ -54,21 +54,34 @@ io.on('connection', (socket) => {
    })
 
    //*CRIEI ESSA FUNÇÃO, QUE CRIA O OBJETO MENSAGEM AQUI E DAI SIM ENVIA PARA O SERVIDOR, NA ARRAY DE MENSAGENS E TRANSMITE PARA OS OUTROS
+   //TODO tentando pegar o roomId na função abaixo para poder acessar o array de mensagens e adicionar a mensagem lá, mas também emiti-la para os outros na sala
    //!AINDA EM PRODUÇÃO
-   socket.on('new_message', async (messageTxt) => {
-      
-      // const userId = User.findOne
+   socket.on('new_message', async (messageTxt) => {      
+      const token = socket.handshake.headers.cookie.split('=')[1];
 
-      console.log(socket.userId);
+      if(token){
+         try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const userId = decoded.userId;
+            // console.log(userId) //DEBUG
+            const message = new Message({
+               content: messageTxt,
+               sender: {
+                  id: userId
+               }
+            })
 
+            io.to(roomId).emit(message.content);
+            const room = Chat.findById(roomId);
+            console.log(room)
+            // room.messages.push(message);
 
-      // const message = new Message({
-      //    content: messageTxt,
-      //    timeStamp,
-      //    sender: {
-      //       id: 
-      //    }
-      // })
+         } catch (error) {
+            console.log('Algum erro ao tentar pegar o userId', error)
+         }
+      }
+      // console.log(token);
+      // console.log(messageTxt);
    })
 
    socket.on('disconnect', () => {
