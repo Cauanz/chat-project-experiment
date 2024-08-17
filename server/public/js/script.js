@@ -8,6 +8,7 @@ const getChats = async () => {
                   const chatName = document.createElement('a')
                   chatName.dataset.chatId = chat._id
                   chatName.textContent = chat.name
+                  chatName.href = `/enter-room/${chat._id}`;
                   chatName.classList.add('chat-room')
                   chatList.appendChild(chatName)
                })
@@ -134,34 +135,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
    // inputBtn.addEventListener("click", sendMessage);
 })
-
-
-//TODO REFAZER TODA A IDEIA DE REDIRECIONAR OU MUDAR ABORDAGEM PARA REDIRECIONAR PARA SALA DE CHAT E PASSAR COISAS SEI LÁ
-//! NADA ESTÁ FUNCIONANDO, REDIRECIONAR, PROBLEMA COM RECARREGAMENTO AINDA EXISTE ETC....
-// setInterval(() => {
-//    document.querySelectorAll('.chat-room').forEach((chatRoom) => {
-//       // chatRoom.addEventListener("click", async () => {
-//       //    const roomId = chatRoom.dataset.chatId; // Supondo que o roomId esteja armazenado no dataset do elemento
-//       //    try {
-//       //       const response = await axios.get(`http://localhost:3000/enter-room/${roomId}`);
-//       //       // Atualiza o conteúdo da página de forma segura
-//       //       const parser = new DOMParser();
-//       //       const doc = parser.parseFromString(response.data, 'text/html');
-//       //       document.documentElement.innerHTML = doc.documentElement.innerHTML;
-//       //    } catch (error) {
-//       //       console.error('Erro ao entrar na sala:', error);
-//       //    }
-//       // });
-
-//      //* MINHA ABORDAGEM
-//       chatRoom.addEventListener("click", async () => {
-//          axios.get(`http://localhost:3000/enter-room/${chatRoom.dataset.chatId}`)
-//          .then(res => {
-//             console.log(res) //DEBUG
-//             window.location.href = res.data.link
-//             document.querySelector("html").title = res.data.title.name
-//          })
-//          .catch(err => console.log(err))
-//       })
-//    })
-// }, 2000)

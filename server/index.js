@@ -127,10 +127,7 @@ app.get('/', authenticateToken, (req, res) => {
 app.get('/enter-room/:roomId', authenticateToken, async (req, res) => {
    try {
       const chatId = await req.params.roomId;
-      const chatTitle = await Chat.findById(chatId);
-      // console.log(chatTittle.name)
-      // res.sendFile(path.join(__dirname, 'public', `/html/chat_room.html`));
-      return res.json({"link": path.join(__dirname, 'public', '/html/chat_room.html'), "chatId": chatId, "title": chatTitle})
+      res.sendFile(path.join(__dirname, 'public', `/html/chat_room.html`));
    } catch (error) {
       res.status(500).send('Erro ao tentar entrar no chat');
    }
