@@ -5,9 +5,16 @@ const messageSchema = new mongoose.Schema({
    timeStamp: {type: Date, default: Date.now },
    sender: {
       id: {
-         type: mongoose.Schema.Types.ObjectId
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'User',
+         required: true
       }
    }
+});
+
+messageSchema.pre('save', function(next){
+   this.timeStamp = moment().tz('America/Sao_Paulo').toDate();
+   next();
 });
 
 const Message = mongoose.model('Message', messageSchema);

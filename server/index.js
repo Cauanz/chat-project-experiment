@@ -50,11 +50,10 @@ io.on('connection', (socket) => {
       // }
 
       socket.join(roomId);
+      socket.roomId = roomId;
       console.log(`Cliente entrou na sala: ${roomId}`)
    })
 
-   //*CRIEI ESSA FUNÇÃO, QUE CRIA O OBJETO MENSAGEM AQUI E DAI SIM ENVIA PARA O SERVIDOR, NA ARRAY DE MENSAGENS E TRANSMITE PARA OS OUTROS
-   //TODO tentando pegar o roomId na função abaixo para poder acessar o array de mensagens e adicionar a mensagem lá, mas também emiti-la para os outros na sala
    //!AINDA EM PRODUÇÃO
    socket.on('new_message', async (messageTxt) => {      
       const token = socket.handshake.headers.cookie.split('=')[1];
@@ -66,15 +65,14 @@ io.on('connection', (socket) => {
             // console.log(userId) //DEBUG
             const message = new Message({
                content: messageTxt,
-               sender: {
-                  id: userId
-               }
+               sender: userId
             })
 
-            io.to(roomId).emit(message.content);
-            const room = Chat.findById(roomId);
-            console.log(room)
-            // room.messages.push(message);
+            io.to(socket.roomId).emit(message.content);
+            const room = await Chat.findById(socket.roomId);
+            // console.log(room)
+            room.messages.push(message);
+            room.save()
 
          } catch (error) {
             console.log('Algum erro ao tentar pegar o userId', error)
@@ -240,6 +238,24 @@ app.get('/get-chats', authenticateToken, async (req, res) => {
    } catch (error) {
       console.log("Ocorreu um erro ao tentar recuperar as salas de chat", error)
    }
+})
+
+app.get('/get-messages', authenticateToken, async (req, res) => {
+
+   const roomId = req.body.roomId;
+   
+   try {
+      
+      const chat = await Chat.findById(roomId);
+      
+      res.send(chat.messages);
+      console.log(roomId);
+      // res.json(chat)
+
+   } catch (error) {
+      console.log(`Ocorreu um erro ao tentar recuperar mensagens do chat: ${roomId}`, error)
+   }
+
 })
 
 app.post('/create-room', authenticateToken, async (req, res) => {
