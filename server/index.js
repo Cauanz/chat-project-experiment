@@ -137,7 +137,7 @@ app.get('/', authenticateToken, (req, res) => {
 
 app.get('/enter-room/:roomId', authenticateToken, async (req, res) => {
    try {
-      const chatId = await req.params.roomId;
+      const chatId = req.params.roomId;
       res.sendFile(path.join(__dirname, 'public', `/html/chat_room.html`));
    } catch (error) {
       res.status(500).send('Erro ao tentar entrar no chat');
@@ -241,17 +241,20 @@ app.get('/get-chats', authenticateToken, async (req, res) => {
 })
 
 app.get('/get-messages', authenticateToken, async (req, res) => {
-
-   const roomId = req.body.roomId;
+   
+   const roomId = req.query.roomId;
+   
+   if(!roomId) {
+      return res.status(400).json("O roomId não foi passado ou é inválido");
+   }
    
    try {
       
       const chat = await Chat.findById(roomId);
-      
-      res.send(chat.messages);
-      console.log(roomId);
-      // res.json(chat)
 
+      if(chat){
+         res.send(chat.messages);
+      }
    } catch (error) {
       console.log(`Ocorreu um erro ao tentar recuperar mensagens do chat: ${roomId}`, error)
    }

@@ -5,14 +5,18 @@ const roomId = pathname.split('/').pop();
 
 
 //TODO terminar essa função para recuperar e renderizar mensagens do chat atual que também é chamado a cada nova mensagem enviada tanto por voce quanto por outros participantes ou talvez não porque o socket.io já garante uma conexão que faz voce receber a mensagem na hora (eu achei que precisava pegar do DB mas não)
+//* JÁ FIZ FUNCIONAR, CONSIGO PEGAR AS MENSAGENS
 const getMessages = async () => {
-
-   axios.get('http://localhost:3000/get-messages')
+   axios.get(`http://localhost:3000/get-messages?roomId=${roomId}`)
    .then(res => res)
    .then(data => {
       const messageList = document.querySelector('#message-container');
 
-      console.log(data)
+      data.data.forEach(message => {
+         const element = document.createElement('p')
+         element.textContent = message.content
+         messageList.appendChild(element)
+      });
    })
 }
 
