@@ -1,0 +1,140 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+}
+
+main {
+   width: 90%;
+   height: 90%;
+   position: relative;
+   bottom: 0;
+   right: 0;
+}
+
+/* Estilo para o cabeçalho */
+header {
+   text-align: center;
+   background-color: #f2f2f2;
+   padding: 20px;
+}
+
+header h1 {
+   color: #333;
+}
+
+.chat-rooms {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+/* .chats div {
+   border: 1px solid black;
+   padding: 5px;
+} */
+
+.chats a {
+   color: #000;
+   text-decoration: none;
+   padding: 5px;
+   border: 1px solid black;
+   cursor: pointer;
+}
+
+/* .chats div:hover {
+   scale: 1.1;
+   color: #505050;
+} */
+
+.chats {
+   width: 100%;
+   display: flex;
+   justify-content: space-evenly;
+}
+
+
+
+.open-modal {
+   width: 40px;
+   height: 40px;
+   border: none;
+   background: #e6e6e6;
+   border-radius: 50%;
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   cursor: pointer;
+}
+
+.open {
+   display: flex !important;
+}
+
+.close-modal {
+   width: 40px;
+   height: 40px;
+   border: none;
+   background: transparent;
+   border-radius: 50%;
+   position: absolute;
+   top: 0;
+   right: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   cursor: pointer;
+}
+
+.create-form {
+   height: 300px;
+   width: 500px;
+   display: none;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   background-color: lightslategray;
+   position: absolute;
+   bottom: 5px;
+   right: 0;
+}
+
+#chat-participants {
+   width: 200px;
+   height: auto;
+   padding: 10px;
+   font-size: 16px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   background-color: #fff;
+}
+
+label {
+   display: flex;
+   flex-direction: column;
+   padding: 3px;
+   margin: 5px;
+}
+
+/* Estilo para o rodapé */
+footer {
+   text-align: center;
+   background-color: #f2f2f2;
+   padding: 10px;
+}
+
+footer p {
+   color: #333;
+}

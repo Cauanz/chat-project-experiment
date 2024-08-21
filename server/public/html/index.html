@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Página inicial</title>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js" integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+   <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+
+   <main>
+      <header>
+         <h1>Bem-vindo ao Chat</h1>
+      </header>
+
+<!-- TODO Alterar e criar arquivos HTML para os chats, sala principal etc... -->
+      <div class="chat-rooms">
+         <h2>Salas de Chat:</h2>
+         <section class="chats">
+            <!-- SALAS DE CHAT -->
+         </section>
+      </div>
+
+      <!-- <section id="message-container">
+         <!-- * Aqui as mensagens serão renderizadas
+      </section>
+
+      <form id="message-form">
+         <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+         <button type="submit" id="submit-button">Enviar</button>
+      </form> -->
+
+      <button class="open-modal"><ion-icon size="large" name="add-circle-outline"></ion-icon></button>
+
+      <div class="create-form">
+         <button class="close-modal"><ion-icon size="large" name="close-circle-outline"></ion-icon></button>
+         <h2>Criar sala de chat</h2>
+         <form class="chat-form">
+            <label for="chat-name">
+               Nome da sala:
+               <input type="text" name="chat-name" id="chat-name">
+            </label>
+
+            <label for="chat-participants">
+               Escolha quem vai estar na sua sala:
+               <select name="chat-participants" id="chat-participants" multiple>
+                  <!-- OPTIONS COM USUARIOS -->
+               </select>
+            </label>
+
+            <button class="submit" type="submit">Criar</button>
+         </form>
+      </div>
+   </main> 
+
+   <footer>
+      <p>2023 Meu Chat &copy; </p>
+   </footer>
+
+   <script src="./js/script.js"></script>
+</body>
+</html>
