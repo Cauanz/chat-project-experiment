@@ -55,24 +55,26 @@ io.on('connection', (socket) => {
    })
 
    //!AINDA EM PRODUÇÃO
-   socket.on('new_message', async (messageTxt) => {      
+   socket.on('new_message', async (messageTxt, AkcCallBack) => {      
       const token = socket.handshake.headers.cookie.split('=')[1];
 
       if(token){
          try {
+
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const userId = decoded.userId;
-            // console.log(userId) //DEBUG
             const message = new Message({
                content: messageTxt,
                sender: userId
             })
 
-            io.to(socket.roomId).emit(message.content);
+            io.to(socket.roomId).emit("message", message.content);
             const room = await Chat.findById(socket.roomId);
             // console.log(room)
             room.messages.push(message);
             room.save()
+
+            AkcCallBack({success: true})
 
          } catch (error) {
             console.log('Algum erro ao tentar pegar o userId', error)
